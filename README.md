@@ -6,3 +6,4 @@ Steps:
   1. Obtain relevant/valid Vagrant file or run `vagrant init`
   2. vagrant up
   3. vagrant ssh
+  4. vagrant destroy
