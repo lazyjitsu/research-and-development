@@ -28,21 +28,25 @@ Vagrant.configure("2") do |config|
   
   # Define the database server (db01) with CentOS 7
   config.vm.define "db01" do |db01|
-    db01.vm.box = "centos/7"
-    db01.vm.hostname = "db01.local"
-    db01.vm.network "private_network", ip: "192.168.56.103"
-  
-    db01.vm.provider "virtualbox" do |vb|
-      vb.memory = "2048"
-      vb.cpus = 2
-    end
-  
-    # Provisioning script for db01
-    db01.vm.provision "shell", inline: <<-SHELL
-      yum install -y wget unzip mariadb-server -y
-      systemctl start mariadb
-      systemctl enable mariadb
-    SHELL
-  end
-  end
+   config.vm.box = "ubuntu/bionic64"
+   config.vm.provision "shell", inline: <<-SHELL
+    # Update the package list
+    apt-get update
 
+    # Install MariaDB server
+    apt-get install -y mariadb-server
+
+    # Start the MariaDB service
+    systemctl start mariadb
+
+    # Enable MariaDB to start on boot
+    systemctl enable mariadb
+
+    # Secure the installation
+    mysql -e "UPDATE mysql.user SET Password=PASSWORD('root_password') WHERE User='root';"
+    mysql -e "DELETE FROM mysql.user WHERE User='';"
+    mysql -e "DROP DATABASE IF EXISTS test;"
+    mysql -e "FLUSH PRIVILEGES;"
+  SHELL
+end
+end
