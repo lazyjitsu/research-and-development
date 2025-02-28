@@ -1,3 +1,7 @@
+# PreReqs
+`vagrant plugin install vagrant-hostmanager`
+
+
 # Research and Development
 - A review/recreation of past projects
 - identify the relevant technologies for stock trading
@@ -9,4 +13,9 @@ Steps:
   4. vagrant destroy | vagrant destroy $box --> vagrant destroy db01
 
   5. vagrant status
+
+# check entire system for vms IMU
+# vagrant global-status  
+# vagrant global-status --prune # i believe cleans up cache. look this up
+# use the ids to do: vagrant destroy $id
 
