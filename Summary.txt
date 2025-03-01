@@ -1,0 +1,80 @@
+What features do orchestration tools offer?
+
+- High Availability or no downtime
+- Scalability or high performance
+- Disaster recovery -backup and restore
+	- containerized container can run/restore from the latest state it was in
+
+Kubernetes Components
+
+- Volumes
+- Pod
+- Service
+- Ingress
+- Secrets
+- ConfigMap
+- StatefulSet
+- Deployment
+
+Node and Pod
+	Pod:
+		- Smallest unit of K8s
+		- Abstraction over container ( a layer on top of the container)
+		- We only interact with the Kubernetes layer
+		- Pods are usually only have one container inside of it
+		- Out of box K8s provides its own virtual network
+			- ea. pod gets its own IP address
+			- if pod dies, it will be reborn w/new ip address (not good for db see service)
+Service and Ingress
+	Service
+	 - Permanent IP address
+	 - lifecycle of Pod and Service are NOT connected (if pod dies, IP stays same IMU)
+	 - External service (open pod to external sources e.g. browser connectivity) 
+	 - Internal service: Obviously wouldn't want public access, for internal pod access (pod-to-pod)
+	
+note for external service you would be accessing our pod using http://$ip:$port  which is not cool for real customers. This is where Ingress comes in
+
+	Ingress
+		- Request will go to ingress, and ingress will now forward to service
+
+ConfigMap and Secret
+
+Now if you have an application that connects to a database, that would usually be defined in some application.properties or some kind of external env variable. But db URL usually in the built application! That's an important point because if the URL changed for the db, you would have to change it in the app.properties and rebuild the application, push to the repo and pull it to your pod. That's a little too tidiuous so K8s has ConfigMap
+	
+	- ConfigMap
+		- external configuratin of your app
+			DB_URL = mongo-db
+		- now for username/password it would not be good for plaintext url like the DB_URL. For this K8s has Secret
+	- Secret (just like ConfigMap but more secure)
+		- used to store secret data
+		- base64 encoded
+		- The built-in security mechanism is not enabled by default!
+		- passwords, certificates etc.. are good for secret
+
+You can actually access the ConfigMap via environment variables from w/in the pods or even as a properties file
+
+Volumes
+	- if pod gets restarted, data is lost!
+	- volume can be on local machine, remote, remote cloud etc..
+	- this is outside of the K8s cluster and thus needs to be managed like normal (yours/there) responsbility not K8s
+
+Deployment and Stateful Set
+
+Note Service has 2 functionalities: Permanent IP address and load balancer
+	- define blueprints for pods
+	- decide how many replicats of that pod you want
+That blueprint is called 'Deployment'
+	- we don't create pods, we create deployments
+	- we can scale up/down with deployments
+	- Deployments are an abstraction over pods and pods are an abstraction over containers
+	- In practice, we mostly work with deployments NOT pods
+
+Important: We can create replicas across nodes (where node is some dedicated resource like a vm or physical box) but we can't do that iow: can't use deployment5s with databases because of state! So we can't simply allow a  pod to auto-reconnect to a database via deployment.
+Need to know which pods are writing/reading from the db storage in order to avoid the data inconsistencies. 
+
+Stateful (mongodb/mysql/elasticsearch etc..)
+	- like deployments would take care of replicating the pods and scaling them up/down.
+	- making sure writes/reads are synchronize for consistency
+	- tedious to build. for this reason it's typical to have our K8s pods connect to an external db outside of the K8s cluster!
+
+		
