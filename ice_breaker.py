@@ -4,7 +4,6 @@ from langchain_openai import ChatOpenAI
 from langchain_ollama import ChatOllama
 from langchain_core.output_parsers import StrOutputParser
 
-
 import os
 
 information = """
