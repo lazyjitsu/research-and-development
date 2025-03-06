@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6ea04c91bf9752866fdd8adb540708fd1eb53f62cc344a09fa083e16f487b2d6"
+            "sha256": "3d9c3207b216eea1ace456526a51c9402110d91e4ffcce81f5b25b0586ba9158"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -654,6 +654,15 @@
             "markers": "python_version >= '3.9' and python_version < '4.0'",
             "version": "==0.3.41"
         },
+        "langchain-ollama": {
+            "hashes": [
+                "sha256:c47700ca68b013358b1e954493ecafb3bd10fa2cda71a9f15ba7897587a9aab2",
+                "sha256:d13fe8735176b652ca6e6656d7902c1265e8c0601097569f7c95433f3d034b38"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9' and python_version < '4.0'",
+            "version": "==0.2.3"
+        },
         "langchain-openai": {
             "hashes": [
                 "sha256:0aefc7bdf8e7398d41e09c4313cace816df6438f2aa93d34f79523487310f0da",
@@ -863,13 +872,21 @@
             "markers": "python_version >= '3.10'",
             "version": "==2.2.3"
         },
+        "ollama": {
+            "hashes": [
+                "sha256:85505663cca67a83707be5fb3aeff0ea72e67846cea5985529d8eca4366564a1",
+                "sha256:891dcbe54f55397d82d289c459de0ea897e103b86a3f1fad0fdb1895922a75ff"
+            ],
+            "markers": "python_version >= '3.8' and python_version < '4.0'",
+            "version": "==0.4.7"
+        },
         "openai": {
             "hashes": [
-                "sha256:9b7cd8f79140d03d77f4ed8aeec6009be5dcd79bbc02f03b0e8cd83356004f71",
-                "sha256:a155fa5d60eccda516384d3d60d923e083909cc126f383fe4a350f79185c232a"
+                "sha256:0b08c58625d556f5c6654701af1023689c173eb0989ce8f73c7fd0eb22203c76",
+                "sha256:15566d46574b94eae3d18efc2f9a4ebd1366d1d44bfc1bdafeea7a5cf8271bcb"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==1.65.3"
+            "version": "==1.65.4"
         },
         "orjson": {
             "hashes": [

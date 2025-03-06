@@ -38,6 +38,6 @@ def scrape_linkedin_profile(linkedin_profile_url: str, mock: bool=True):
 if __name__ == "__main__":
     print(
         scrape_linkedin_profile(
-            "https://www.linikedin.com/in/eden-marco/",mock=True
+            "https://www.linikedin.com/in/eden-marco/"
         )
     )
