@@ -34,10 +34,14 @@ def scrape_linkedin_profile(linkedin_profile_url: str, mock: bool=True):
         and k not in ["certifications"]
     }
     return data
-
 if __name__ == "__main__":
     print(
         scrape_linkedin_profile(
-            "https://www.linikedin.com/in/eden-marco/"
-        )
+            linkedin_profile_url="https://www.linkedin.com/in/eden-marco/"
+        ),
     )
+# if __name__ == "__main__":
+#     # print(
+#     #     scrape_linkedin_profile("https://www.linkedin.com/in/eden-marco/")
+#     # )
+#     print(scrape_linkedin_profile("https://www.linkedin.com/in/eden-marco/"))

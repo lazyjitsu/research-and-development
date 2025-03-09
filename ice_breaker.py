@@ -7,9 +7,12 @@ from langchain_core.output_parsers import StrOutputParser
 
 import os
 
-if __name__ == '__main__':
-    load_dotenv()
-    print("Hello Lang Chain")
+from agents.linkedin_lookup_agent import lookup as linkedin_lookup
+
+def ice_breaker_with(name:str) -> str:
+    linkedin_username = linkedin_lookup(name=name)
+    linkedin_data = scrape_linkedin_profile(linkedin_profile_url=linkedin_username)
+
     summary_template = """
         given the Linkedin information {information} about a person from I want you to create:
         1. a short summary
@@ -19,16 +22,20 @@ if __name__ == '__main__':
         input_variables=["information"],template=summary_template
     )
 
-    llm = ChatOpenAI(temperature=0,model_name='gpt-3.5-turbo')
-    llm = ChatOpenAI(temperature=0,model_name='gpt-4o')
-
-   #  llm = ChatOllama(temperature=0,model='llama3')
-    # llm = ChatOllama(temperature=0,model='mistral')
-
+    llm = ChatOpenAI(temperature=0,model='gpt-4o')
+    chain = summary_prompt_template | llm 
+    res = chain.invoke(input={"information":linkedin_data})
+    
+    llm = ChatOpenAI(temperature=0,model='gpt-4o')
 
     chain = summary_prompt_template | llm 
-    linkedin_data = scrape_linkedin_profile(linkedin_profile_url='https://www.linkedin.com/in/eden-marco')
 
     res = chain.invoke(input={"information":linkedin_data})
-    # print(chain.run(information=information)
     print(res)
+
+
+if __name__ == '__main__':
+    load_dotenv()
+
+    print("Hello Ice Breaker")
+    ice_breaker_with(name="Marco Perez WellsFargo")
