@@ -23,6 +23,8 @@ def ice_breaker_with(name:str) -> str:
         and twitter posts {twitter_posts} I want you to create:
         1. a short summary
         2. two interesting facts about them
+
+        Use both informatino from twitter and linkedin to create the summary
     """
     summary_prompt_template = PromptTemplate(
         input_variables=["information","twitter_posts"],template=summary_template
