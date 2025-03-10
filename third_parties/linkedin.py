@@ -35,6 +35,8 @@ def scrape_linkedin_profile(linkedin_profile_url: str, mock: bool=True):
     }
     return data
 if __name__ == "__main__":
+    import sys
+    sys.stdout.reconfigure(encoding='utf-8')
     print(
         scrape_linkedin_profile(
             linkedin_profile_url="https://www.linkedin.com/in/eden-marco/"
