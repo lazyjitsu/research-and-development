@@ -8,6 +8,8 @@ load_dotenv()
 def scrape_linkedin_profile(linkedin_profile_url: str, mock: bool=True):
     """scrape information from LinkedIn profiles,
         Manually scrape the information from the LinkedIn profile"""
+    print('////////////// scraping linkedin profile \\\\\\\\\\')
+    print(linkedin_profile_url)
     if mock:
         linkedin_profile_url = "https://gist.githubusercontent.com/emarco177/859ec7d786b45d8e3e3f688c6c9139d8/raw/5eaf8e46dc29a98612c8fe0c774123a7a2ac4575/eden-marco-scrapin.json"
         response = requests.get(
@@ -15,6 +17,7 @@ def scrape_linkedin_profile(linkedin_profile_url: str, mock: bool=True):
             timeout=10,
         )
     else:
+        print('Scraping linkedin profile',linkedin_profile_url)
         api_endpoint = "https://api.scrapin.io/enrichment/profile"
         params = {
             "apikey": os.environ["SCRAPIN_API_KEY"],
@@ -33,6 +36,7 @@ def scrape_linkedin_profile(linkedin_profile_url: str, mock: bool=True):
         if v not in ([], "","",None)
         and k not in ["certifications"]
     }
+    print('finished scraping ',data)
     return data
 if __name__ == "__main__":
     import sys
@@ -42,8 +46,3 @@ if __name__ == "__main__":
             linkedin_profile_url="https://www.linkedin.com/in/eden-marco/"
         ),
     )
-# if __name__ == "__main__":
-#     # print(
-#     #     scrape_linkedin_profile("https://www.linkedin.com/in/eden-marco/")
-#     # )
-#     print(scrape_linkedin_profile("https://www.linkedin.com/in/eden-marco/"))
