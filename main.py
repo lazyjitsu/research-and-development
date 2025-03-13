@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from langchain.agents import tool
 from langchain_core.prompts import PromptTemplate
 from langchain_core.tools import render_text_description
-from langchain.agents.output_parsers.react_json_single_input import ReActJsonSingleInputOutputParser
+from langchain.agents.output_parsers.react_single_input import ReActSingleInputOutputParser
 from langchain.schema import AgentAction, AgentFinish
 from typing import Union, List
 from langchain.tools import Tool, tool
@@ -14,6 +14,7 @@ load_dotenv()
 @tool
 def get_text_length(text:str)->int:
     """Returns the length of a text by characters"""
+    print(f"get_text_length invoked with {text=}")
     text  = text.strip("\n").strip('"')
     return len(text)
 
@@ -55,13 +56,18 @@ if __name__ == '__main__':
         """
     prompt = PromptTemplate.from_template(template=template).partial(tools=render_text_description(tools), tool_names = ", ".join([t.name for t in tools]))
     # stop observation tells the LLM to stop generating text when it sees the word "Observation"
-    llm = ChatOpenAI(temperature = 0,stop =["\nObservation"])
+    #llm = ChatOpenAI(temperature = 0,stop =["\nObservation"])
+    llm = ChatOpenAI(temperature = 0,stop =["Observation"])
+
     # agent = prompt | llm
     # lambda fcn that is receiving a dictionary and returning the value of the key "input"
-    agent = {"input": lambda x:x["input"]} | prompt | llm | ReActJsonSingleInputOutputParser()
+    agent = {"input": lambda x:x["input"]} | prompt | llm | ReActSingleInputOutputParser()
     
     res = agent.invoke({"input":"What is the length of 'monster' in characters?'"})
-    agent_step: Union[AgentAction, AgentFinish] = agent.invoke({"input": "What is the length of the text 'wolf' in characters?"})
+    # agent_step will be of the type AgentAction or AgentFinish
+    # agent_step is the output of the agent.invoke
+    # AgentAction or AgentFinish is the output of the agent.invoke
+    agent_step: Union[AgentAction, AgentFinish] = agent.invoke({"input": "What is the length of 'wolf' in characters?"})
     print(agent_step)
 
 
