@@ -3,8 +3,11 @@ from langchain.agents import tool
 from langchain_core.prompts import PromptTemplate
 from langchain_core.tools import render_text_description
 from langchain.agents.output_parsers.react_single_input import ReActSingleInputOutputParser
+from langchain.agents.format_scratchpad import format_log_to_str
 from langchain.schema import AgentAction, AgentFinish
 from typing import Union, List
+
+
 from langchain.tools import Tool, tool
 
 from langchain_openai import ChatOpenAI
@@ -28,7 +31,7 @@ if __name__ == '__main__':
    # print("hello React LangChain",get_text_length(text="cats"))
    # since get_text_length is no longer a fcn but a structured tool, it can not be called normally. need to do it like below
    # so the way you pass is using input=some dictionary
-    print("hello Reacts LangChain",get_text_length.invoke(input={"text":"catss"}))
+   # print("hello Reacts LangChain",get_text_length.invoke(input={"text":"catss"}))
     tools = [get_text_length]
 
     # this prompt will be sent to the LLM and this is going to generate the thought of the LLM and 
@@ -52,28 +55,56 @@ if __name__ == '__main__':
         Begin!
 
         Question: {input}
-        Thought:
+        Thought: {agent_scratchpad}
         """
     prompt = PromptTemplate.from_template(template=template).partial(tools=render_text_description(tools), tool_names = ", ".join([t.name for t in tools]))
     # stop observation tells the LLM to stop generating text when it sees the word "Observation"
     #llm = ChatOpenAI(temperature = 0,stop =["\nObservation"])
     llm = ChatOpenAI(temperature = 0,stop =["Observation"])
-
+    intermediate_steps = []
     # agent = prompt | llm
     # lambda fcn that is receiving a dictionary and returning the value of the key "input"
-    agent = {"input": lambda x:x["input"]} | prompt | llm | ReActSingleInputOutputParser()
+    agent = (
+        {
+            "input": lambda x:x["input"],
+            "agent_scratchpad": lambda x: format_log_to_str(x["agent_scratchpad"]),
+        } 
+        | prompt 
+        | llm
+        | ReActSingleInputOutputParser()
+    )
     
-    res = agent.invoke({"input":"What is the length of 'monster' in characters?'"})
+    # res = agent.invoke({"input":"What is the length of 'monster' in characters?'"})
     # agent_step will be of the type AgentAction or AgentFinish
     # agent_step is the output of the agent.invoke
     # AgentAction or AgentFinish is the output of the agent.invoke
-    agent_step: Union[AgentAction, AgentFinish] = agent.invoke({"input": "What is the length of 'wolf' in characters?"})
+    agent_step: Union[AgentAction, AgentFinish] = agent.invoke(
+        {
+            "input": "What is the length in characters of the text Dog?",
+            "agent_scratchpad": intermediate_steps,
+        }
+        )
     print(agent_step)
 
 
 if isinstance(agent_step, AgentAction):
+    print("AGENT STEP IS AN ACTION",agent_step)
     tool_name = agent_step.tool
     tool_to_use = find_tool_by_name(tools, tool_name)
     tool_input = agent_step.tool_input
     observation = tool_to_use.func(str(tool_input))
-    print(f"{observation=}")
+    # print(f"{observation=}")
+    intermediate_steps.append((agent_step,str(observation)))
+    # agent_step: Union[AgentAction, AgentFinish] = agent.invoke(
+    # {"input": "What is the length of 'wolf' in characters?"},
+    # intermediate_steps
+    # )
+    #print(agent_step)
+agent_step: Union[AgentAction, AgentFinish] = agent.invoke(
+        {
+            "input": "What is the length in characters of the text Dog?",
+            "agent_scratchpad": intermediate_steps,
+        }
+    )
+print("INTERMEDIATE STEPS 1",agent_step)
+    # print("INTERMEDIATE STEPS 2",intermediate_steps[1])
