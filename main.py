@@ -106,5 +106,9 @@ agent_step: Union[AgentAction, AgentFinish] = agent.invoke(
             "agent_scratchpad": intermediate_steps,
         }
     )
-print("INTERMEDIATE STEPS 1",agent_step)
+if isinstance(agent_step, AgentFinish):
+    print("AGENT STEP IS A FINISH",agent_step)
+    print("INTERMEDIATE STEPS",intermediate_steps)
+    print("FINAL OUTPUT",agent_step.return_values)
+    #
     # print("INTERMEDIATE STEPS 2",intermediate_steps[1])
