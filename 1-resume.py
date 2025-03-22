@@ -34,8 +34,8 @@ if __name__ == "__main__":
     print("\n----- Prompt with System and Human Messages (Tuple) -----\n")
 
     messages = [
-        ("system", "You are a writer for {context}."),
-        ("human", "Summarize my resume in {rescount}  sentences."),
+        ("system", "You are an engineer for {context} writers."),
+        ("human", "Write a professional summary of this resume in {rescount} sentences."),
     ]
     prompt_template = ChatPromptTemplate.from_messages(messages)
 
@@ -45,5 +45,5 @@ if __name__ == "__main__":
         combine_docs_model
     )
 
-    res = retriever_chain.invoke({"input": "resumes", "rescount": 5})
+    res = retriever_chain.invoke({"input": "resume", "rescount": 5})
     print(res["answer"])
