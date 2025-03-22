@@ -30,31 +30,15 @@ if __name__ == "__main__":
     new_vectorstore = FAISS.load_local(
         "faiss_for-marco_idx", embeddings, allow_dangerous_deserialization=True # not recommended for production systems. see deserialization attacks
     )
-    messages = [
-        ("system", "You are a {title} manager"),
-        ("human", "Summarize the resume in {sentences} sentences."),
-    ]
-    # print(documents)
-    # PART 2: Prompt with Multiple Placeholders
-    # print("\n----- Prompt with Multiple Placeholders -----\n")
-    # template_multiple = """You are a helpful assistant.
-    # Human: Tell me a {adjective} short story about a {animal}.
-    # Assistant:"""
-    # prompt_multiple = ChatPromptTemplate.from_template(template_multiple)
-    # prompt = prompt_multiple.invoke({"adjective": "funny", "animal": "panda"})
-    # result = model.invoke(prompt)
-    # print(result.content)
-    # print('----------------------------')
 
-    # PART 3: Prompt with System and Human Messages (Using Tuples)
     print("\n----- Prompt with System and Human Messages (Tuple) -----\n")
-    # notice the array of tuples and how we pass in 'system' and 'human' to notify the LLM of the message type!
-    # 
+
     messages = [
         ("system", "You are a Technology Manager who hires {context}."),
         ("human", "Summarize my resume in {rescount}  sentences."),
     ]
     prompt_template = ChatPromptTemplate.from_messages(messages)
+
     combine_docs_model = create_stuff_documents_chain(OpenAI(), prompt_template)
     retriever_chain = create_retrieval_chain(
         new_vectorstore.as_retriever(),
