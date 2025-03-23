@@ -13,7 +13,7 @@ def ingest_docs():
    # loader = DirectoryLoader("test-flder",glob="**/*.md")
     loader = ReadTheDocsLoader("langchain-docs/api.python.langchain.com/en/latest/",encoding="utf-8")
     raw_docos = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=25)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=600, chunk_overlap=50)
     documents = text_splitter.split_documents(raw_docos)
 
     print(f"Loaded {len(raw_docos)}")
